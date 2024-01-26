@@ -1,8 +1,8 @@
 <tr id="<%= dom_id expense %>">
-  <td class="p-3"><%= expense.name %></td>
+  <td class="p-3"><%= expense.name.truncate(20) %></td>
   <td class="p-3"><%= expense.date %></td>
-  <td class="p-3"><%= expense.amount %></td>
-  <td class="p-3"><%= expense.description %></td>
+  <td class="p-3"><%= expense.amount %> PLN</td>
+  <td class="p-3"><%= expense.description.truncate(20) %></td>
   <td class="p-3"><%= link_to "Edit this expense", expense, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %></td>
   <td class="p-3"><%= link_to "Delete this expense", expense_path(expense), data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' }, class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %></td>
 </tr>
