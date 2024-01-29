@@ -3,9 +3,20 @@
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
   <% end %>
 
+  <div class="flex justify-between space-x-2 mb-4 flex-wrap">
+    <%= link_to expenses_path do %>
+      <button class="rounded-lg py-3 px-5 bg-blue-500 text-white block font-medium hover:bg-blue-400">All</button>
+    <% end %>
+    <% @months.each do |month| %>
+      <%= link_to expenses_path(month: month) do %>
+        <button class="rounded-lg py-3 px-5 bg-blue-500 text-white block font-medium hover:bg-blue-400"><%= month %></button>
+      <% end %>
+    <% end %>
+  </div>
+
   <div class="flex justify-between items-center">
     <h1 class="font-bold text-4xl">Expenses (<%= @expenses.map(&:amount).sum %> PLN)</h1>
-    <%= link_to "New expense", new_expense_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+    <%= link_to "New expense", new_expense_path, class: "rounded-lg py-3 px-5 bg-blue-500 text-white block font-medium hover:bg-blue-400" %>
   </div>
 
   <div id="expenses" class="min-w-full mt-4">
@@ -15,9 +26,10 @@
         <h2 class="text-lg mt-2 mb-2 font-medium"><%= expenses.map(&:amount).sum %> PLN</h2>
       </div>
       <table class="min-w-full table-fixed border-collapse border border-slate-200">
-        <thead class="bg-blue-600 text-white rounded-md text-left">
+        <thead class="bg-blue-500 text-white rounded-md text-left">
           <tr class="rounded-md">
             <th class="min-w[150-px] p-3 font-medium">Name</th>
+            <th class="min-w[150-px] p-3 font-medium">Category</th>
             <th class="min-w[150-px] p-3 font-medium">Date</th>
             <th class="min-w[150-px] p-3 font-medium">Amount</th>
             <th class="min-w[150-px] p-3 font-medium">Description</th>

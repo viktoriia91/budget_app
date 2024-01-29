@@ -3,9 +3,14 @@ class ExpensesController < ApplicationController
 
   # GET /expenses or /expenses.json
   def index
-    @expenses = Expense.all
-    @expenses_by_month = @expenses.group_by { |expense| expense.date.strftime("%Y-%m") }
-    @expenses_by_day = @expenses.order(date: :desc).group_by { |expense| expense.date.strftime("%A, %d %B") }
+    if params[:month]
+      @expenses = Expense.where('extract(month from date) = ?', Date::MONTHNAMES.index(params[:month]))
+    else
+      @expenses = Expense.all
+    end
+      @expenses_by_month = @expenses.group_by { |expense| expense.date.strftime("%Y-%m") }
+      @expenses_by_day = @expenses.order(date: :desc).group_by { |expense| expense.date.strftime("%A, %d %B") }
+      @months = Date::MONTHNAMES.compact
   end
 
   # GET /expenses/1 or /expenses/1.json
@@ -67,6 +72,6 @@ class ExpensesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def expense_params
-      params.require(:expense).permit(:name, :date, :amount, :description)
+      params.require(:expense).permit(:name, :date, :amount, :description, :category_id)
     end
 end
