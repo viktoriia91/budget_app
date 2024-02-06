@@ -5,12 +5,27 @@ class ExpensesController < ApplicationController
   def index
     if params[:month]
       @expenses = Expense.where('extract(month from date) = ?', Date::MONTHNAMES.index(params[:month]))
+
+      first_day_of_month = Date.new(Date.today.year, Date::MONTHNAMES.index(params[:month]), 1)
+      last_day_of_month = first_day_of_month.end_of_month
+      @days_in_month = (first_day_of_month..last_day_of_month).map(&:day).to_a
+
+      @values_per_day = @days_in_month.map do |day|
+        @expenses.where('extract(day from date) = ?', day).sum(:amount)
+      end
     else
       @expenses = Expense.all
     end
-      @expenses_by_month = @expenses.group_by { |expense| expense.date.strftime("%Y-%m") }
-      @expenses_by_day = @expenses.order(date: :desc).group_by { |expense| expense.date.strftime("%A, %d %B") }
       @months = Date::MONTHNAMES.compact
+      @expenses_by_month = @expenses.group_by { |expense| expense.date.strftime("%Y-%m") }
+
+      @monthly_sums = []
+      @expenses_by_month.values.each do | month_expenses |
+        total_amount = month_expenses.sum { |expense| expense.amount }
+        @monthly_sums << total_amount
+      end
+
+      @expenses_by_day = @expenses.order(date: :desc).group_by { |expense| expense.date.strftime("%A, %d %B") }
   end
 
   # GET /expenses/1 or /expenses/1.json

@@ -18,6 +18,8 @@
     <h1 class="font-bold text-4xl">Expenses (<%= @expenses.map(&:amount).sum %> PLN)</h1>
     <%= link_to "New expense", new_expense_path, class: "rounded-lg py-3 px-5 bg-blue-500 text-white block font-medium hover:bg-blue-400" %>
   </div>
+  
+  <canvas id="myChart" width="400px" height="100px" data-labels=" <%= params[:month] ? @days_in_month : @months %>" data-data="<%= params[:month] ? @values_per_day : @monthly_sums %>"></canvas>
 
   <div id="expenses" class="min-w-full mt-4">
     <% @expenses_by_day.each do |day, expenses| %>
