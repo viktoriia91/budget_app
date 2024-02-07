@@ -12,13 +12,13 @@
   <% end %>
 
   <div class="my-5">
-    <%= form.label :name %>
+    <%= form.label :name, class: "block text-gray-700 font-bold mb-2" %>
     <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :color %>
-    <%= form.text_field :color, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  <div class="form-group">
+    <%= form.label :color, class: "block text-gray-700 font-bold mb-2" %>
+    <%= form.select :color, options_for_select(tailwind_color(:new_category)), {}, class: "form-control" %>
   </div>
 
   <div class="inline">
