@@ -1,34 +1,46 @@
 class ExpensesController < ApplicationController
   before_action :set_expense, only: %i[ show edit update destroy ]
 
-  # GET /expenses or /expenses.json
   def index
-    if params[:month]
-      @expenses = Expense.where('extract(month from date) = ?', Date::MONTHNAMES.index(params[:month]))
+    if params[:year].present?
+      @selected_year = params[:year].to_i
+    else
+      # Set a default selected year, for example, the current year
+      @selected_year = Date.current.year
+    end
 
-      first_day_of_month = Date.new(Date.today.year, Date::MONTHNAMES.index(params[:month]), 1)
-      last_day_of_month = first_day_of_month.end_of_month
-      @days_in_month = (first_day_of_month..last_day_of_month).map(&:day).to_a
+    if params[:month]
+      @selected_month = Date::MONTHNAMES.index(params[:month])
+      @expenses = Expense.where('extract(month from date) = ? AND extract(year from date) = ?', @selected_month, params[:year])
+      start_date = Date.new(params[:year].to_i, @selected_month, 1)
+      end_date = start_date.end_of_month
+      @days_in_month = (start_date..end_date).map(&:day).to_a
 
       @values_per_day = @days_in_month.map do |day|
         @expenses.where('extract(day from date) = ?', day).sum(:amount)
       end
     else
-      @expenses = Expense.all
+      @expenses = Expense.where('extract(year from date) = ?', @selected_year)
     end
+
       @months = Date::MONTHNAMES.compact
-      @expenses_by_month = @expenses.group_by { |expense| expense.date.strftime("%Y-%m") }
+
+      @years = Expense.pluck(:date).map(&:year).uniq.sort.reverse
+
+      @expenses_by_year_and_month = @expenses.group_by { |expense| [expense.date.year, expense.date.month] }
 
       @monthly_sums = []
-      @expenses_by_month.values.each do | month_expenses |
-        total_amount = month_expenses.sum { |expense| expense.amount }
+
+      # Calculate monthly sums for each year and month
+      @expenses_by_year_and_month.each do |year_month, expenses|
+        total_amount = expenses.sum(&:amount)
         @monthly_sums << total_amount
       end
 
+      # Group expenses by day
       @expenses_by_day = @expenses.order(date: :desc).group_by { |expense| expense.date.strftime("%A, %d %B") }
   end
 
-  # GET /expenses/1 or /expenses/1.json
   def show
   end
 

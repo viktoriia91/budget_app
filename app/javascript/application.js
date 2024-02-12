@@ -22,3 +22,10 @@ document.addEventListener('turbo:load', () => {
     },
     });
   })
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('year-select').addEventListener('change', function() {
+    // Trigger form submission when year is selected
+    document.getElementById('year-form').submit();
+  });
+});
