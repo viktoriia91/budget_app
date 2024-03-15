@@ -11,6 +11,13 @@ You can run the app on a local server:
 ```
 $ rails server
 ```
+To utilize the application with Tailwind CSS properly configured, you need to execute the following command:
+```
+$ ./bin/dev
+```
+This command ensures that Tailwind CSS styles are processed correctly for optimal usage of the application.
+
+
 ## Acknowledgements
 
 This application was developed based on instructions provided by the [EasyRails](https://www.youtube.com/@easy-rails) YouTube Channel. I am grateful for their valuable tutorials and guidance, which greatly contributed to the development of this project.
